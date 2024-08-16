@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import lex as l
 import copy
-s='25+3*5-8-4'
+s='2-(8+5)'
 s=l.lex(s)
 s.append('$')
 print(s)
@@ -13,7 +13,12 @@ def prec(j):
     elif j=='+' or j=='-': return 10
     elif j=='*' or j=='/': return 20
     elif j=='(' or j==')': return 50
-
+def parenthesis():
+    global i
+    i+=1
+    exp=[]
+    exp=parseExp()
+    return exp
 def parseExp(minPrec=-1):
     global i
     exp=[]
@@ -27,7 +32,12 @@ def parseExp(minPrec=-1):
             i-=1
         if prec(op)==40:
             exp.append(int(op))
+        if op=='(':
+            exp.append(parenthesis())
+        if op==')':
+            return exp
         i+=1
+
         #print(exp)
         try:
             op=s[i]
